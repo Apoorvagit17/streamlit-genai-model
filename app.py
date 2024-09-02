@@ -14,7 +14,7 @@ disease_name = st.text_input("Enter the crop disease name:", "")
 def get_preventive_measures(disease_name):
     # Replace with your actual LLaMA API endpoint and API key
     api_url = "https://api.llama-api.com"  # Replace with your actual LLaMA API endpoint
-    api_key = "llx-pJJGjdBTutJBLgR3tqIFBIQohVZr2nlSAZ2iSga3hFV62IQX"  # Replace with your actual API key
+    api_key = "llx-fO2wyiL4ICEdzfv2jWh2MOfCpzudWlDTBGLvjbsos0ssHoKy"  # Replace with your actual API key
 
     headers = {
         "Content-Type": "application/json",
