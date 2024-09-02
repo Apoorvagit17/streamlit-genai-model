@@ -1,30 +1,46 @@
 import streamlit as st
 import requests
 
-# Set up the title and description
-st.title('Plant Disease Detection and Prevention')
-st.write('This app detects plant diseases and provides preventive measures.')
+# Streamlit App Configuration
+st.set_page_config(page_title="Crop Disease Prevention", page_icon="🌾", layout="centered")
 
-# Function to make a request to your ML model API
+# Title
+st.title("Crop Disease Prevention Assistant")
+
+# Input: Crop Disease Name
+disease_name = st.text_input("Enter the crop disease name:", "")
+
+# Define a function to call the LLaMA API
 def get_preventive_measures(disease_name):
-    # Assuming your model API is hosted at this endpoint
-    url = 'http://192.168.1.9:8083/predict'  # Replace with your actual endpoint
-    response = requests.post(url, json={'disease': disease_name})
-    
-    if response.status_code == 200:
+    # Replace with your actual LLaMA API endpoint and API key
+    api_url = "https://api.llama-api.com"  # Replace with your actual LLaMA API endpoint
+    api_key = "API-KEY"  # Replace with your actual API key
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"  # Common way to include an API key
+    }
+
+    payload = {
+        "prompt": f"What are some preventive measures or first aid that a farmer can do for {disease_name}?",
+        "max_tokens": 100  # Adjust max_tokens based on how much text you want
+    }
+
+    try:
+        response = requests.post(api_url, headers=headers, json=payload)
+        response.raise_for_status()  # Raise an exception for HTTP errors
         data = response.json()
-        return data.get('preventive_measures', 'No preventive measures found.')
-    else:
-        return 'Error in fetching data from the model API.'
+        return data.get("text", "No preventive measures found.")
+    except requests.RequestException as e:
+        st.error(f"Error: {e}")
+        return "Could not fetch data from the API. Please try again later."
 
-# User input for the disease name
-disease_name = st.text_input('Enter the plant disease name:')
-
-if st.button('Get Preventive Measures'):
+# Submit button
+if st.button("Get Preventive Measures"):
     if disease_name:
-        # Fetch preventive measures
+        st.write(f"Fetching preventive measures for *{disease_name}*...")
         preventive_measures = get_preventive_measures(disease_name)
-        st.subheader('Preventive Measures:')
+        st.write("### Preventive Measures:")
         st.write(preventive_measures)
     else:
-        st.write('Please enter a disease name.')
+        st.warning("Please enter a crop disease name.")
